@@ -1,0 +1,32 @@
+{
+  "name": "melonbot",
+  "version": "1.0.0",
+  "description": "A bot for the Melon Patch server",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/puckzxz/melonbot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "author": "puckzxz",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/puckzxz/melonbot/issues"
+  },
+  "homepage": "https://github.com/puckzxz/melonbot#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "discord.js": "^11.4.2",
+    "discord.js-commando": "^0.10.0",
+    "dotenv": "^6.1.0",
+    "mongodb": "^3.1.8",
+    "path": "^0.12.7",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
