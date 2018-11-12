@@ -39,12 +39,12 @@ module.exports = class SubmitCommand extends Command {
 
   async run(msg, args) {
     if (args.genre !== "all") {
-      const message = await msg.say(`Getting all movies with the **${args.genre}** genre from the database...`);
+      var message = await msg.say(`Getting all movies with the **${args.genre}** genre from the database...`);
       getGenreCount(args.genre, function (result) {
         return message.edit(`There are **${result.length}** movies with the genre **${args.genre}** in the Melon Patch Movie Database!`);
       });
     } else {
-      const message = await msg.say(`Getting all movies from the database...`);
+      var message = await msg.say(`Getting all movies from the database...`);
       getAllInDB(function (result) {
         return message.edit(`There are **${result.length}** movies in the Melon Patch Movie Database!`);
       });

@@ -43,7 +43,7 @@ module.exports = class PollCommand extends Command {
   }
 
   async run(msg, args) {
-    const message = await msg.say("Creating poll...");
+    var message = await msg.say("Creating poll...");
     getMovieFromDB(args.genre, function (result) {
       let movieTitles = [];
       if (result.length < 2) {
