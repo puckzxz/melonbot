@@ -9,7 +9,7 @@ require('dotenv').config({
 
 const client = new Client({
     owner: '135554522616561664',
-    commandPrefix: '!'
+    commandPrefix: '$'
 });
 
 client
