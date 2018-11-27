@@ -27,9 +27,9 @@ module.exports = class SubmitCommand extends Command {
     }
 
     async run(msg, args) {
-        var message = await msg.say(`Getting the amount of entries for **${args.title}**...`);
+        let message = await msg.say(`Getting the amount of entries for **${args.title}**...`);
         getAmountByTitle(args.title, function (result) {
-            return message.edit(`**${args.title}** has **${result.length}** entires in the database!`);
+            return message.edit(`**${args.title}** has **${result.length}** entries in the database!`);
         });
     }
 };

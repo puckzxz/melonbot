@@ -84,4 +84,5 @@ typings/
 
 src/.env
 
+.idea
 .vscode

@@ -91,4 +91,4 @@ let validGenres = [
     'Thriller',
     'War',
     'Western',
-]
+];

@@ -8,8 +8,10 @@ require('dotenv').config({
 });
 
 const client = new Client({
-    owner: '135554522616561664',
-    commandPrefix: '$'
+    owner: ['135554522616561664',
+            '190220855609917442'],
+    commandPrefix: '$',
+    disableEveryone: true,
 });
 
 client

@@ -20,14 +20,18 @@ module.exports = class SubmitCommand extends Command {
             guildOnly: true,
             args: [{
                 key: 'title',
-                prompt: 'What tite would you like to search?',
+                prompt: 'What title would you like to search?',
                 type: 'string',
             }]
         });
     }
 
+    hasPermission(msg) {
+        return msg.member.roles.some(role => validRoles.includes(role.name));
+    }
+
     async run(msg, args) {
-        var message = await msg.say(`Deleting ${args.title} from the database...`);
+        let message = await msg.say(`Deleting ${args.title} from the database...`);
         deleteMovieByTitle(args.title);
         message.edit(`Deleted **${args.title}** from the database`);
     }
@@ -39,8 +43,8 @@ function deleteMovieByTitle(movieTitle) {
     }, function (err, db) {
         if (err) {
             console.log(chalk.red(err));
-        };
-        var dbo = db.db(process.env.MONGO_DB);
+        }
+        let dbo = db.db(process.env.MONGO_DB);
         dbo.collection(process.env.MONGO_COL).deleteOne({
             'Title': `${movieTitle}`
         }, function (err, obj) {
@@ -52,3 +56,8 @@ function deleteMovieByTitle(movieTitle) {
         });
     });
 }
+
+let validRoles = [
+    'Owner',
+    'High Priest Of Melontology'
+];

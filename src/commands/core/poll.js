@@ -22,10 +22,11 @@ module.exports = class PollCommand extends Command {
             examples: ['poll <GENRE> <MOVIE AMOUNT>'],
             guildOnly: true,
             args: [{
-                    key: 'genre',
-                    prompt: 'What movie genre would you like? Ex. Sci-Fi',
-                    type: 'string'
-                },
+                key: 'genre',
+                prompt: 'What movie genre would you like? Ex. Sci-Fi',
+                type: 'string',
+                default: 'any'
+            },
                 {
                     key: 'count',
                     prompt: 'How many movies will be in the poll? 2-10',
@@ -42,41 +43,92 @@ module.exports = class PollCommand extends Command {
         });
     }
 
+    hasPermission(msg) {
+        return msg.member.roles.some(role => validRoles.includes(role.name));
+    }
+
     async run(msg, args) {
-        var message = await msg.say("Creating poll...");
-        getMovieFromDB(args.genre, function (result) {
-            let movieTitles = [];
-            if (result.length < 2) {
-                return message.edit(`There are not enough movies with the **${args.genre}** tag!\nThere must be **at least** 2 movies!\nThere may not be enough movies that fit that genre or you might of misspelled the genre!`);
-            }
-            if (result.length < args.count) {
-                msg.say(`There are not **${args.count}** movies with the **${args.genre}** tag!  I will try my best with the movies I have!`);
-                args.count = result.length;
-            }
-            result.forEach(element => {
-                movieTitles.push(element.Title);
-            });
-            let moviesForPoll = [];
-            while (moviesForPoll.length < args.count) {
-                let movie = movieTitles[Math.floor(Math.random() * movieTitles.length)];
-                if (!moviesForPoll.includes(movie)) {
-                    moviesForPoll.push(movie);
+        let message = await msg.say("Creating poll...");
+        if (args.genre === "any") {
+            getAllMoviesFromDB(function (result) {
+                let movieTitles = [];
+                if (result.length < 2) {
+                    return message.edit(`There are not enough movies with the **${args.genre}** tag!\nThere must be **at least** 2 movies!\nThere may not be enough movies that fit that genre or you might of misspelled the genre!`);
                 }
-            }
-            xmlHttp.open('POST', 'https://www.strawpoll.me/api/v2/polls', false);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json');
-            xmlHttp.send(JSON.stringify({
-                'title': "Melon Patch Movie Night",
-                'options': moviesForPoll,
-                'multi': 'false'
-            }));
-            let respJson = JSON.parse(xmlHttp.responseText);
-            return message.edit(`https://www.strawpoll.me/${respJson.id}`);
-        });
+                result.forEach(element => {
+                    movieTitles.push(element.Title);
+                });
+                let moviesForPoll = [];
+                while (moviesForPoll.length < args.count) {
+                    let movie = movieTitles[Math.floor(Math.random() * movieTitles.length)];
+                    if (!moviesForPoll.includes(movie)) {
+                        moviesForPoll.push(movie);
+                    }
+                }
+                xmlHttp.open('POST', 'https://www.strawpoll.me/api/v2/polls', false);
+                xmlHttp.setRequestHeader('Content-Type', 'application/json');
+                xmlHttp.send(JSON.stringify({
+                    'title': "Melon Patch Movie Night",
+                    'options': moviesForPoll,
+                    'multi': 'false'
+                }));
+                let respJson = JSON.parse(xmlHttp.responseText);
+                return message.edit(`https://www.strawpoll.me/${respJson.id}`);
+            })
+        } else {
+            getMoviesWithGenreFromDB(args.genre, function (result) {
+                let movieTitles = [];
+                if (result.length < 2) {
+                    return message.edit(`There are not enough movies with the **${args.genre}** tag!\nThere must be **at least** 2 movies!\nThere may not be enough movies that fit that genre or you might of misspelled the genre!`);
+                }
+                if (result.length < args.count) {
+                    msg.say(`There are not **${args.count}** movies with the **${args.genre}** tag!  I will try my best with the movies I have!`);
+                    args.count = result.length;
+                }
+                result.forEach(element => {
+                    movieTitles.push(element.Title);
+                });
+                let moviesForPoll = [];
+                while (moviesForPoll.length < args.count) {
+                    let movie = movieTitles[Math.floor(Math.random() * movieTitles.length)];
+                    if (!moviesForPoll.includes(movie)) {
+                        moviesForPoll.push(movie);
+                    }
+                }
+                xmlHttp.open('POST', 'https://www.strawpoll.me/api/v2/polls', false);
+                xmlHttp.setRequestHeader('Content-Type', 'application/json');
+                xmlHttp.send(JSON.stringify({
+                    'title': "Melon Patch Movie Night",
+                    'options': moviesForPoll,
+                    'multi': 'false'
+                }));
+                let respJson = JSON.parse(xmlHttp.responseText);
+                return message.edit(`https://www.strawpoll.me/${respJson.id}`);
+            });
+        }
     }
 };
 
-function getMovieFromDB(movieGenre, callback) {
+function getAllMoviesFromDB(callback) {
+    MongoClient.connect(mongoURL, {
+        useNewUrlParser: true
+    }, function (err, db) {
+        if (err) {
+            console.log(chalk.red(err));
+        }
+        let dbo = db.db(process.env.MONGO_DB);
+        dbo.collection(process.env.MONGO_COL).find({})
+            .toArray(function (err, result) {
+            if (err) {
+                console.log(chalk.red(err));
+            }
+            db.close();
+            callback(result);
+        });
+    });
+}
+
+function getMoviesWithGenreFromDB(movieGenre, callback) {
     MongoClient.connect(mongoURL, {
         useNewUrlParser: true
     }, function (err, db) {
@@ -97,3 +149,8 @@ function getMovieFromDB(movieGenre, callback) {
         });
     });
 }
+
+let validRoles = [
+    'Owner',
+    'High Priest Of Melontology'
+];

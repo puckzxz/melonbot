@@ -35,12 +35,12 @@ function getAllInDB(callback) {
     }, function (err, db) {
         if (err) {
             console.log(chalk.red(err));
-        };
+        }
         var dbo = db.db(process.env.MONGO_DB);
         dbo.collection(process.env.MONGO_COL).find({}).toArray(function (err, result) {
             if (err) {
                 console.log(chalk.red(err));
-            };
+            }
             db.close();
             callback(result);
         });
