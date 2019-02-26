@@ -40,12 +40,12 @@ client
         `Client logged in\nLogged in as ${client.user.username}#${
           client.user.discriminator
         } - ${client.user.id}`
-      ) // run every 30 seconds
+      )
     );
     setInterval(() => {
       const index = Math.floor(Math.random() * (statuses.length - 1) + 1);
       client.user.setActivity(statuses[index]);
-    }, 30000);
+    }, 30000); // run every 30 seconds
   })
   .on("disconnect", () => {
     console.log(chalk.yellow("Client disconnected!"));
