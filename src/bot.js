@@ -43,7 +43,7 @@ client
       )
     );
     setInterval(() => {
-      const index = Math.floor(Math.random() * (statuses.length - 1) + 1);
+      const index = Math.floor(Math.random() * statuses.length);
       client.user.setActivity(statuses[index]);
     }, 30000); // run every 30 seconds
   })
