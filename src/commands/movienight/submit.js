@@ -14,10 +14,10 @@ module.exports = class SubmitCommand extends Command {
   constructor(client) {
     super(client, {
       name: "submit",
-      group: "core",
+      group: "movienight",
       memberName: "submit",
       description: "Adds a movie to the Melon Patch Movie Database",
-      examples: ["submit <IMDB URL>"],
+      examples: [`${client.commandPrefix}submit <IMDB URL>`],
       guildOnly: true,
       args: [
         {

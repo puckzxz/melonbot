@@ -13,11 +13,11 @@ module.exports = class PollCommand extends Command {
   constructor(client) {
     super(client, {
       name: "poll",
-      group: "core",
+      group: "movienight",
       memberName: "poll",
       description:
         "Creates a strawpoll based on the genre and amount of movies ",
-      examples: ["poll <GENRE> <MOVIE AMOUNT>"],
+      examples: [`${client.commandPrefix}poll <GENRE> <MOVIE AMOUNT>`],
       guildOnly: true,
       args: [
         {

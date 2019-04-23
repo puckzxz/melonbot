@@ -1,17 +1,13 @@
 const { Command } = require("discord.js-commando");
-const path = require("path");
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
 
-module.exports = class SubmitCommand extends Command {
+module.exports = class MovieNightCommand extends Command {
   constructor(client) {
     super(client, {
       name: "movienight",
-      group: "core",
+      group: "movienight",
       memberName: "movienight",
       description: "Opts in or opts out of the Melon Patch Movie Night role",
-      examples: ["movienight"],
+      examples: [`${client.commandPrefix}movienight`],
       guildOnly: true
     });
   }

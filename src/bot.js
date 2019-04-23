@@ -19,7 +19,10 @@ const statuses = [
 ];
 
 const client = new Client({
-  owner: ["135554522616561664", "190220855609917442"],
+  owner: [
+    "135554522616561664", // puckzxz#2080
+    "190220855609917442" // Ethik#3764
+  ],
   commandPrefix: "$",
   disableEveryone: true
 });
@@ -55,8 +58,11 @@ client
   });
 
 client.registry
-  .registerGroup("core", "Core")
+  .registerGroup("movienight", "MovieNight")
+  .registerGroup("admin", "Administration")
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, "commands"));
 
-client.login(process.env.TOKEN);
+process.env.DEBUG === "true"
+  ? client.login(process.env.TOKEN_DEV)
+  : client.login(process.env.TOKEN);

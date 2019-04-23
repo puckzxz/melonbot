@@ -11,10 +11,10 @@ module.exports = class SubmitCommand extends Command {
   constructor(client) {
     super(client, {
       name: "genre",
-      group: "core",
+      group: "movienight",
       memberName: "genre",
       description: "Gets the amount of movies in a genre from the database",
-      examples: ["genre <GENRE>"],
+      examples: [`${client.commandPrefix}genre <GENRE>`],
       guildOnly: true,
       args: [
         {
