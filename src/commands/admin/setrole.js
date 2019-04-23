@@ -29,8 +29,12 @@ module.exports = class RemoveRoleCommand extends Command {
   async run(msg, args) {
     let member = msg.guild.member(args.user);
     let role = msg.guild.roles.find(role => role.name === args.role);
+    if (!role) {
+      msg.say(`The \`${args.role}\` role does not exist.`);
+      return;
+    }
     if (!member.roles.has(role.id)) {
-      member.setRoles([role]);
+      member.addRole(role);
       msg.say(`Set \`${role.name}\` role to ${member.user.tag} - ${member.id}`);
     } else {
       msg.say(
