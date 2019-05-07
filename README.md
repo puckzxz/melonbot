@@ -2,7 +2,7 @@
 
 ## About
 
-This bot is used to make organzing Melon Patch Movie Night's easier.  Anyone can submit movies to the movie database so there can be a wide variety of movies and polls can be made in one easy command.
+This bot is used a general purpose bot made for Melon Patch.
 
 ## Usage
 
