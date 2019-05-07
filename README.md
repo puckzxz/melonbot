@@ -2,7 +2,7 @@
 
 ## About
 
-This bot is used a general purpose bot made for Melon Patch.
+This is a general purpose bot made for Melon Patch.
 
 ## Usage
 
