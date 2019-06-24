@@ -64,4 +64,4 @@ function deleteMovieByTitle(movieTitle) {
   );
 }
 
-let validRoles = ["Owner", "High Priest Of Melontology"];
+let validRoles = ["The First Melon", "High Priest Of Melontology"];
