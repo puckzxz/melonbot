@@ -13,7 +13,7 @@ module.exports = class MovieNightCommand extends Command {
   }
 
   async run(msg) {
-    let role = msg.guild.roles.find(role => role.name === "MovieNight");
+    let role = msg.guild.roles.find(role => role.name === "movienight");
     if (!msg.member.roles.has(role.id)) {
       msg.member.addRole(role);
       msg.reply("I added you to the `MovieNight` role!");
