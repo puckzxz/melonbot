@@ -2,13 +2,9 @@ const { Command } = require("discord.js-commando");
 const { RichEmbed } = require("discord.js");
 const chalk = require("chalk");
 const XMLHttpRequest = require("xmlhttprequest");
-const path = require("path");
 const MongoClient = require("mongodb").MongoClient;
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
 let xmlHttp = new XMLHttpRequest.XMLHttpRequest();
-let mongoURL = process.env.MONGO_URL;
+const config = require("../../config")
 
 module.exports = class SubmitCommand extends Command {
   constructor(client) {
@@ -62,7 +58,7 @@ function getIMDBID(imdbURL) {
 function getMovieData(imdbID) {
   xmlHttp.open(
     "GET",
-    `http://www.omdbapi.com/?i=${imdbID}&apikey=${process.env.API_KEY}`,
+    `http://www.omdbapi.com/?i=${imdbID}&apikey=${config.OMDB_API_KEY}`,
     false
   );
   xmlHttp.send(null);
@@ -84,7 +80,7 @@ function getMovieData(imdbID) {
 
 function addMovieToDB(movieDetailsJSON) {
   MongoClient.connect(
-    mongoURL,
+    config.MONGO_URL,
     {
       useNewUrlParser: true
     },
@@ -92,7 +88,7 @@ function addMovieToDB(movieDetailsJSON) {
       if (err) {
         return console.log(chalk.red(err));
       }
-      var dbo = db.db(process.env.MONGO_DB);
+      var dbo = db.db(config.MONGO_DB);
       var movie = {
         Title: movieDetailsJSON.Title,
         Year: movieDetailsJSON.Year,
@@ -103,7 +99,7 @@ function addMovieToDB(movieDetailsJSON) {
         ImdbID: movieDetailsJSON.ImdbID,
         Rating: movieDetailsJSON.Rating
       };
-      dbo.collection(process.env.MONGO_COL).insertOne(movie, function(err) {
+      dbo.collection(config.MONGO_COL).insertOne(movie, function(err) {
         if (err) {
           return console.log(chalk.red(err));
         }

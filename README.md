@@ -12,17 +12,9 @@ This bot was specifcally built for Melon Patch needs but you could modify for yo
 
 `npm install && npm start`
 
-This bot does use a `.env` file in the `src` directory
+The bot requires a `config.js` in the `src` directory.
 
-The `.env` variables you will need to supply are
-
-| Name            | Use                                            |
-|-----------------|------------------------------------------------|
-| `TOKEN`         | Your discord bot token                         |
-| `API_KEY`       | Your API Key for OMDb                          |
-| `MONGO_URL`     | The URL to your MongoDB database               |
-| `MONGO_DB`      | The database name in MongoDB you'll be using   |
-| `MONGO_COL`     | The collection in the database you'll be using |
+Take a look at `src/config.template.js` for the variables you need to supply.
 
 ## Built with
 

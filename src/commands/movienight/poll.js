@@ -1,12 +1,8 @@
 const { Command } = require("discord.js-commando");
-const path = require("path");
 const { XMLHttpRequest } = require("xmlhttprequest");
 const MongoClient = require("mongodb").MongoClient;
 const chalk = require("chalk");
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
-let mongoURL = process.env.MONGO_URL;
+const config = require("../../config")
 let xmlHttp = new XMLHttpRequest();
 
 module.exports = class PollCommand extends Command {
@@ -128,7 +124,7 @@ module.exports = class PollCommand extends Command {
 
 function getAllMoviesFromDB(callback) {
   MongoClient.connect(
-    mongoURL,
+    config.MONGO_URL,
     {
       useNewUrlParser: true
     },
@@ -136,9 +132,9 @@ function getAllMoviesFromDB(callback) {
       if (err) {
         console.log(chalk.red(err));
       }
-      let dbo = db.db(process.env.MONGO_DB);
+      let dbo = db.db(config.MONGO_DB);
       dbo
-        .collection(process.env.MONGO_COL)
+        .collection(config.MONGO_COL)
         .find({})
         .toArray(function(err, result) {
           if (err) {
@@ -153,7 +149,7 @@ function getAllMoviesFromDB(callback) {
 
 function getMoviesWithGenreFromDB(movieGenre, callback) {
   MongoClient.connect(
-    mongoURL,
+    config.MONGO_URL,
     {
       useNewUrlParser: true
     },
@@ -161,9 +157,9 @@ function getMoviesWithGenreFromDB(movieGenre, callback) {
       if (err) {
         console.log(chalk.red(err));
       }
-      let dbo = db.db(process.env.MONGO_DB);
+      let dbo = db.db(config.MONGO_DB);
       dbo
-        .collection(process.env.MONGO_COL)
+        .collection(config.MONGO_COL)
         .find({
           Genre: {
             $in: [`${movieGenre}`]

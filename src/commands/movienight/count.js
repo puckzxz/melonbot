@@ -1,11 +1,7 @@
 const { Command } = require("discord.js-commando");
 const chalk = require("chalk");
-const path = require("path");
 const MongoClient = require("mongodb").MongoClient;
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
-let mongoURL = process.env.MONGO_URL;
+const config = require("../../config")
 
 module.exports = class SubmitCommand extends Command {
   constructor(client) {
@@ -33,7 +29,7 @@ module.exports = class SubmitCommand extends Command {
 
 function getAllInDB(callback) {
   MongoClient.connect(
-    mongoURL,
+    config.MONGO_URL,
     {
       useNewUrlParser: true
     },
@@ -41,9 +37,9 @@ function getAllInDB(callback) {
       if (err) {
         console.log(chalk.red(err));
       }
-      var dbo = db.db(process.env.MONGO_DB);
+      var dbo = db.db(config.MONGO_DB);
       dbo
-        .collection(process.env.MONGO_COL)
+        .collection(config.MONGO_COL)
         .find({})
         .toArray(function(err, result) {
           if (err) {

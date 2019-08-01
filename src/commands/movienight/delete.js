@@ -1,11 +1,7 @@
 const { Command } = require("discord.js-commando");
 const chalk = require("chalk");
-const path = require("path");
 const MongoClient = require("mongodb").MongoClient;
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
-let mongoURL = process.env.MONGO_URL;
+const config = require("../../config")
 
 module.exports = class SubmitCommand extends Command {
   constructor(client) {
@@ -39,7 +35,7 @@ module.exports = class SubmitCommand extends Command {
 
 function deleteMovieByTitle(movieTitle) {
   MongoClient.connect(
-    mongoURL,
+    config.MONGO_URL,
     {
       useNewUrlParser: true
     },
@@ -47,8 +43,8 @@ function deleteMovieByTitle(movieTitle) {
       if (err) {
         console.log(chalk.red(err));
       }
-      let dbo = db.db(process.env.MONGO_DB);
-      dbo.collection(process.env.MONGO_COL).deleteOne(
+      let dbo = db.db(config.MONGO_DB);
+      dbo.collection(config.MONGO_COL).deleteOne(
         {
           Title: `${movieTitle}`
         },

@@ -1,9 +1,7 @@
 const { Client } = require("discord.js-commando");
 const path = require("path");
 const chalk = require("chalk");
-require("dotenv").config({
-  path: path.join(__dirname, ".env")
-});
+const config = require("./config");
 
 const statuses = [
   "with Puck",
@@ -60,9 +58,60 @@ client
 client.registry
   .registerGroup("movienight", "MovieNight")
   .registerGroup("admin", "Administration")
+  .registerGroup("react", "ReactRole")
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, "commands"));
 
-process.env.DEBUG === "true"
-  ? client.login(process.env.TOKEN_DEV)
-  : client.login(process.env.TOKEN);
+const events = {
+  MESSAGE_REACTION_ADD: "messageReactionAdd",
+  MESSAGE_REACTION_REMOVE: "messageReactionRemove"
+};
+
+client.on("raw", async event => {
+  if (!events.hasOwnProperty(event.t)) return;
+
+  const { d: data } = event;
+  const user = client.users.get(data.user_id);
+  const channel =
+    client.channels.get(data.channel_id) || (await user.createDM());
+
+  if (channel.messages.has(data.message_id)) return;
+
+  const message = await channel.fetchMessage(data.message_id);
+  const emojiKey = data.emoji.id
+    ? `${data.emoji.name}:${data.emoji.id}`
+    : data.emoji.name;
+  let reaction = message.reactions.get(emojiKey);
+
+  if (!reaction) {
+    const emoji = new Discord.Emoji(
+      client.guilds.get(data.guild_id),
+      data.emoji
+    );
+    reaction = new Discord.MessageReaction(
+      message,
+      emoji,
+      1,
+      data.user_id === client.user.id
+    );
+  }
+
+  client.emit(events[event.t], reaction, user);
+});
+
+client.on("messageReactionAdd", (reaction, user) => {
+  let guildUser = reaction.message.guild.member(user);
+  let role = reaction.message.guild.roles.find(
+    role => role.name === config.ReactMessageRole
+  );
+  if (
+    reaction.message.id === config.ReactMessageID &&
+    reaction.emoji.name === config.ReactMessageEmoji
+  ) {
+    if (!guildUser.roles.has(role.id)) {
+      guildUser.addRole(role);
+    }
+  }
+});
+
+config.DEBUG ? client.login(config.TOKEN_DEV) : client.login(config.TOKEN);

@@ -1,6 +1,6 @@
 const { Command } = require("discord.js-commando");
 
-const config = require("./.config/config");
+const config = require("../../config");
 
 module.exports = class RemoveRoleCommand extends Command {
   constructor(client) {

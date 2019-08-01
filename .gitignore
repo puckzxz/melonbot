@@ -86,3 +86,5 @@ src/.env
 
 .idea
 .vscode
+
+src/config.js
