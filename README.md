@@ -1,6 +1,6 @@
 # 🍉 MelonBot
 
-A general purpose bot with special features made specfically for the [MelonPatch](https://melonpatch.gg) community.
+A general purpose bot with special features made specifically for the [MelonPatch](https://melonpatch.gg) community.
 
 All the code for the bot is open source, to use it in your own server follow the steps below.
 
