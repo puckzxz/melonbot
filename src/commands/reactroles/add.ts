@@ -14,7 +14,7 @@ export default class AddCommand extends Command {
         super(client, {
             args: [
                 {
-                    key: "channel",
+                    key: "channelID",
                     parse: (val: string) => {
                         console.log(val);
                         return val.slice(2, -1);
