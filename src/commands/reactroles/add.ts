@@ -55,7 +55,6 @@ export default class AddCommand extends Command {
             const temp = args.reactions.splice(0, 2);
             reactObjs.push({ emoji: temp[0], role: temp[1] });
         }
-        db.InsertMessage({ id: args.messageID, reactions: reactObjs });
         if (msg.channel.id === args.channelID) {
             const msgToReactTo = await msg.channel.fetchMessage(args.messageID);
             reactObjs.forEach((x: IReaction) => {
@@ -70,6 +69,7 @@ export default class AddCommand extends Command {
                 msgToReactTo.react(x.emoji);
             });
         }
+        db.InsertMessage({ id: args.messageID, reactions: reactObjs });
         const entry = FormatReactionMessage(
             await db.GetMessage(args.messageID),
         );
