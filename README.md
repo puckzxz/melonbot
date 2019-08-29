@@ -1,22 +1,28 @@
 # 🍉 MelonBot
 
-## About
+A general purpose bot with special features made specfically for the [MelonPatch](https://melonpatch.gg) community.
 
-This is a general purpose bot made for Melon Patch.
+All the code for the bot is open source, to use it in your own server follow the steps below.
 
-## Usage
+## 🖥 Running Locally
 
-This bot was specifcally built for Melon Patch needs but you could modify for your own uses
+Ensure you have both [Node](https://nodejs.org) and [TypeScript](https://www.typescriptlang.org/index.html) installed.
 
-## Setup
+A `config.ts` file in the `src` directory is **required**.
 
-`npm install && npm start`
+Take a look at [`src/config.template.ts`](src/config.template.ts) for the variables you need to supply.
 
-The bot requires a `config.js` in the `src` directory.
+Once you have your config ready, open a terminal and run `npm install && npm start`
 
-Take a look at `src/config.template.js` for the variables you need to supply.
+## 🐳 Deploying with Docker
 
-## Built with
+Docker image coming soon!
+
+## 🏗 Built with
 
 * [Discord.js](https://discord.js.org)
 * [Discord.js-commando](https://github.com/discordjs/Commando)
+
+## 📜 License
+
+See [UNLICENSE](UNLICENSE) for more details
