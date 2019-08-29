@@ -17,7 +17,7 @@ export default class ShowCommand extends Command {
 
     public async run(msg: CommandMessage) {
         const messages = await db.GetAll();
-        if (!messages) {
+        if (messages.length === 0) {
             return msg.say("No messages in the database!");
         }
         return msg.say(`${FormatReactionMessages(messages)}`);
