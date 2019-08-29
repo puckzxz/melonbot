@@ -6,7 +6,7 @@ export default class ShowCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             description:
-                "Retuns all messages in the database that are currently being watched",
+                "Returns all messages in the database that are currently being watched",
             group: "reactroles",
             memberName: "show",
             name: "show",
