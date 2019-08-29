@@ -10,6 +10,8 @@ export default class ShowCommand extends Command {
             group: "reactroles",
             memberName: "show",
             name: "show",
+            // @ts-ignore Needed because typings are outdated.
+            userPermissions: ["ADMINISTRATOR"],
         });
     }
 
