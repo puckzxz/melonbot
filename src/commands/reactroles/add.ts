@@ -77,9 +77,7 @@ export default class AddCommand extends Command {
             });
         }
         await db.InsertMessage(m);
-        const entry = FormatReactionMessage(
-            await db.GetMessage(args.messageID),
-        );
+        const entry = FormatReactionMessage(m);
         return msg.say(`I added this message...\n${entry}`);
     }
 }
