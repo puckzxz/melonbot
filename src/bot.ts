@@ -1,9 +1,10 @@
 import chalk from "chalk";
-import { Emoji, MessageReaction } from "discord.js";
+import { Emoji, MessageReaction, Role } from "discord.js";
 import { CommandoClient } from "discord.js-commando";
 import path from "path";
 import { DEBUG, TOKEN, TOKEN_DEV } from "./config";
-import db, { IReaction, IReactionMessage } from "./util/db";
+import { Reaction } from "./entity/Reaction";
+import db from "./util/db";
 
 const statuses = [
     "with Puck",
@@ -60,6 +61,7 @@ client
 client.registry
     .registerGroup("admin", "Administration")
     .registerGroup("reactroles", "ReactRoles")
+    .registerGroup("movienight", "MovieNight")
     .registerDefaults()
     .registerCommandsIn(path.join(__dirname, "commands"));
 
@@ -102,50 +104,51 @@ client.on("raw", async (event: any) => {
 });
 
 client.on("messageReactionAdd", async (reaction, user) => {
-    const guildUser = reaction.message.guild.member(user);
-    if (guildUser.id === client.user.id) {
+    const guildMember = reaction.message.guild.member(user);
+    if (guildMember.id === client.user.id) {
         return;
     }
-    const reactObj: IReactionMessage = await db.GetMessage(reaction.message.id);
-    if (!reactObj) {
+    const reactMsg = await db.GetMessage(reaction.message.id);
+    if (!reactMsg) {
         return;
     }
-    const reactRole = reactObj.reactions.find(
-        (x: IReaction) => x.emoji === reaction.emoji.name,
+    const reactRole = reactMsg.reactions.find(
+        (x: Reaction) => x.emoji === reaction.emoji.name,
     );
-    const role = reaction.message.guild.roles.find(
-        (x) => x.name === reactRole!.role,
+    const guildRole = reaction.message.guild.roles.find(
+        (x: Role) => x.name === reactRole.role,
     );
     if (
-        reaction.message.id === reactObj.id &&
-        reaction.emoji.name === reactRole!.emoji
+        reactMsg.id === reaction.message.id &&
+        reactRole.emoji === reaction.emoji.name
     ) {
-        if (!guildUser.roles.has(role.id)) {
-            guildUser.addRole(role);
-            console.log(`Added ${guildUser.displayName} to ${role.name}`);
+        if (!guildMember.roles.has(guildRole.id)) {
+            guildMember.addRole(guildRole);
         }
     }
 });
 
 client.on("messageReactionRemove", async (reaction, user) => {
-    const guildUser = reaction.message.guild.member(user);
-    if (guildUser.id === client.user.id) {
+    const guildMember = reaction.message.guild.member(user);
+    if (guildMember.id === client.user.id) {
         return;
     }
-    const reactObj: IReactionMessage = await db.GetMessage(reaction.message.id);
-    const reactRole = reactObj.reactions.find(
-        (x: IReaction) => x.emoji === reaction.emoji.name,
+    const reactMsg = await db.GetMessage(reaction.message.id);
+    if (!reactMsg) {
+        return;
+    }
+    const reactRole = reactMsg.reactions.find(
+        (x: Reaction) => x.emoji === reaction.emoji.name,
     );
-    const role = reaction.message.guild.roles.find(
-        (x) => x.name === reactRole!.role,
+    const guildRole = reaction.message.guild.roles.find(
+        (x: Role) => x.name === reactRole.role,
     );
     if (
-        reaction.message.id === reactObj.id &&
-        reaction.emoji.name === reactRole!.emoji
+        reactMsg.id === reaction.message.id &&
+        reactRole.emoji === reaction.emoji.name
     ) {
-        if (guildUser.roles.has(role.id)) {
-            guildUser.removeRole(role);
-            console.log(`Removed ${guildUser.displayName} from ${role.name}`);
+        if (guildMember.roles.has(guildRole.id)) {
+            guildMember.removeRole(guildRole);
         }
     }
 });

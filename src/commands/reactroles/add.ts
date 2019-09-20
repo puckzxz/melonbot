@@ -1,6 +1,8 @@
 import { TextChannel } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
-import db, { IReaction } from "../../util/db";
+import { Reaction } from "../../entity/Reaction";
+import { ReactionMessage } from "../../entity/ReactionMessage";
+import db from "../../util/db";
 import { FormatReactionMessage } from "../../util/messages";
 
 interface ICmdArgs {
@@ -49,27 +51,32 @@ export default class AddCommand extends Command {
                 "[!] There must be an equal amount of emojis to roles",
             );
         }
-        const reactObjs: IReaction[] = [];
+        const m = new ReactionMessage();
+        m.id = args.messageID;
+        m.reactions = [];
         // FIXME: Check if the emote and role are in the right order
         while (args.reactions.length > 0) {
             const temp = args.reactions.splice(0, 2);
-            reactObjs.push({ emoji: temp[0], role: temp[1] });
+            const reaction = new Reaction();
+            reaction.emoji = temp[0];
+            reaction.role = temp[1];
+            m.reactions.push(reaction);
         }
         if (msg.channel.id === args.channelID) {
-            const msgToReactTo = await msg.channel.fetchMessage(args.messageID);
-            reactObjs.forEach((x: IReaction) => {
+            const msgToReactTo = await msg.channel.fetchMessage(args.messageID.toString());
+            m.reactions.forEach((x: Reaction) => {
                 msgToReactTo.react(x.emoji);
             });
         } else {
             const msgChannel: TextChannel = msg.guild.channels.get(
                 args.channelID,
             )! as TextChannel;
-            const msgToReactTo = await msgChannel.fetchMessage(args.messageID);
-            reactObjs.forEach((x: IReaction) => {
+            const msgToReactTo = await msgChannel.fetchMessage(args.messageID.toString());
+            m.reactions.forEach((x: Reaction) => {
                 msgToReactTo.react(x.emoji);
             });
         }
-        db.InsertMessage({ id: args.messageID, reactions: reactObjs });
+        await db.InsertMessage(m);
         const entry = FormatReactionMessage(
             await db.GetMessage(args.messageID),
         );

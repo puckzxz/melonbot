@@ -5,8 +5,11 @@
         "module": "commonjs",
         "sourceMap": true,
         "outDir": "dist",
-        "strict": true,
-        "esModuleInterop": true
+        "strict": false,
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"

@@ -1,80 +1,66 @@
-import lowdb from "lowdb";
-import { default as FileAsync } from "lowdb/adapters/FileAsync";
-
-export interface IReactionMessage {
-    id: string;
-    reactions: IReaction[];
-}
-
-export interface IReaction {
-    emoji: string;
-    role: string;
-}
+import { createConnection } from "typeorm";
+import { Movie } from "../entity/Movie";
+import { Reaction } from "../entity/Reaction";
+import { ReactionMessage } from "../entity/ReactionMessage";
 
 class DB {
-    private db!: lowdb.LowdbAsync<any>;
-
     constructor() {
         this.init();
     }
 
-    public async GetMessage(ID: string): Promise<IReactionMessage> {
-        return this.db
-            .get("messages")
-            .value()
-            .find((x: IReactionMessage) => x.id === ID);
+    public async GetMessage(ID: string): Promise<ReactionMessage> {
+        return ReactionMessage.findOne(ID);
     }
 
-    public RemoveMessage(ID: string): void {
-        (this.db as any)
-            .get("messages")
-            .remove({ id: ID })
-            .write();
+    public async GetAllMessages(): Promise<ReactionMessage[]> {
+        return ReactionMessage.find();
     }
 
-    public MessageExists(ID: string): boolean {
-        return this.db
-            .get("messages")
-            .value()
-            .find((x: IReactionMessage) => x.id === ID)
-            ? true
-            : false;
+    public async RemoveMessage(ID: string) {
+        ReactionMessage.findOne(ID).then((msg) => {
+            msg.remove();
+        });
     }
 
-    public InsertMessage(message: IReactionMessage): void {
-        (this.db as any)
-            .get("messages")
-            .push({ id: message.id, reactions: message.reactions })
-            .write();
+    public async InsertMessage(message: ReactionMessage) {
+        ReactionMessage.save(message);
     }
 
-    public async GetAll(): Promise<IReactionMessage[]> {
-        return this.db.get("messages").value();
+    public async MessageExists(ID: string): Promise<boolean> {
+        return ReactionMessage.findOne(ID) ? true : false;
     }
 
-    // TODO: Optimize this function
-    public ReplaceRoleInMessage(
+    public async ReplaceRoleInMessage(
         ID: string,
         oldRole: string,
         newRole: string,
-    ): void {
-        const oldMessage: IReactionMessage = (this.db as any)
-            .get("messages")
-            .value()
-            .find((x: IReactionMessage) => x.id === ID);
-        db.RemoveMessage(oldMessage.id);
-        oldMessage.reactions.map((x: IReaction) => {
-            if (x.role === oldRole) {
-                x.role = newRole;
-            }
-        });
-        db.InsertMessage(oldMessage);
+    ) {
+        ReactionMessage.findOne(ID).then((msg) => [
+            msg.reactions.map((r) => {
+                if (r.role === oldRole) {
+                    r.role = newRole;
+                }
+            }),
+            msg.save(),
+        ]);
+    }
+
+    public async InsertMovie(movie: Movie) {
+        Movie.save(movie);
+    }
+
+    public async GetMoviesByGenre(genre: string): Promise<Movie[]> {
+        return Movie.findByGenre(genre);
     }
 
     private async init() {
-        const adapter = new FileAsync("./data/db.json");
-        this.db = await lowdb(adapter);
-        this.db.defaults({ messages: [] }).write();
+        await createConnection({
+            database: "./data/data.db",
+            entities: [Movie, ReactionMessage, Reaction],
+            logging: false,
+            synchronize: true,
+            type: "sqlite",
+        });
     }
 }
 

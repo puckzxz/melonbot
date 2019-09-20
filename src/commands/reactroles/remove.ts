@@ -25,7 +25,7 @@ export default class RemoveCommand extends Command {
     }
 
     public async run(msg: CommandMessage, args: ICmdArgs) {
-        if (db.MessageExists(args.msgID)) {
+        if (await db.MessageExists(args.msgID)) {
             db.RemoveMessage(args.msgID);
             return msg.say(`I removed ${args.msgID} from the database.`);
         } else {
