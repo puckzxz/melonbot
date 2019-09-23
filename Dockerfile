@@ -14,8 +14,6 @@ RUN tsc
 
 RUN mkdir data
 
-RUN touch data/db.json
-
 RUN find . -name "*.map" -type f -delete
 
 FROM gcr.io/distroless/nodejs
