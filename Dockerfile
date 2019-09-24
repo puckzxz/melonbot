@@ -1,6 +1,6 @@
-FROM node:lts AS builder
+FROM node:alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 
@@ -16,16 +16,8 @@ RUN mkdir data
 
 RUN find . -name "*.map" -type f -delete
 
-FROM gcr.io/distroless/nodejs
-
-COPY --from=builder /usr/src/app/dist /app
-
-COPY --from=builder /usr/src/app/node_modules /app/node_modules
-
-COPY --from=builder /usr/src/app/data /app/data
-
 VOLUME [ "/app/data" ]
 
 WORKDIR /app
 
-CMD ["bot.js"]
+CMD ["node", "dist/bot.js"]
