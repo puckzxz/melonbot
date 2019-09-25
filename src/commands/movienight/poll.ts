@@ -1,9 +1,9 @@
 import { Message, RichEmbed } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Movie } from "../../entity/Movie";
 import db from "../../util/db";
 
 interface ICmdArgs {
-    amount: number;
     genre: string;
 }
 
@@ -12,6 +12,7 @@ export default class PollCommand extends Command {
         super(client, {
             args: [
                 {
+                    default: "all",
                     key: "genre",
                     prompt: "What genre would you like?",
                     type: "string",
@@ -26,7 +27,12 @@ export default class PollCommand extends Command {
 
     // @ts-ignore Types are out of date and requrie you to return a message
     public async run(msg: CommandMessage, args: ICmdArgs) {
-        let movies = await db.GetMoviesByGenre(args.genre);
+        let movies: Movie[];
+        if (args.genre === "all") {
+            movies = await db.GetAllMovies();
+        } else {
+            movies = await db.GetMoviesByGenre(args.genre);
+        }
         movies = shuffle(movies);
         movies = movies.slice(0, 5);
         const embed = new RichEmbed();

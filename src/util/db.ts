@@ -49,6 +49,10 @@ class DB {
         Movie.save(movie);
     }
 
+    public async GetAllMovies(): Promise<Movie[]> {
+        return Movie.find();
+    }
+
     public async GetMoviesByGenre(genre: string): Promise<Movie[]> {
         return Movie.findByGenre(genre);
     }
