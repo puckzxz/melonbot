@@ -11,7 +11,7 @@ export function FormatReactionMessages(messages: ReactionMessage[]): string {
     messages.forEach((x: ReactionMessage) => {
         formatted += `Msg ID: *${x.id}*\n`;
         x.reactions.forEach((y: Reaction, i: number) => {
-            formatted += `\t${i}. Emoji: ${y.emoji}\n\t\t- Role: **${y.role}**\n`;
+            formatted += `\t${i}. Emoji: ${y.emoji.includes(":") ? `<:${y.emoji}>` : y.emoji}\n\t\t- Role: **${y.role}**\n`;
         });
     });
     return formatted;
@@ -26,7 +26,7 @@ export function FormatReactionMessage(message: ReactionMessage): string {
     let formatted: string = "";
     formatted += `Msg ID: *${message.id}*\n`;
     message.reactions.forEach((y: Reaction, i: number) => {
-        formatted += `\t${i}. Emoji: ${y.emoji}\n\t\t- Role: **${y.role}**\n`;
+        formatted += `\t${i}. Emoji: ${y.emoji.includes(":") ? `<:${y.emoji}>` : y.emoji}\n\t\t- Role: **${y.role}**\n`;
     });
     return formatted;
 }

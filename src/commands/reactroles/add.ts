@@ -58,6 +58,10 @@ export default class AddCommand extends Command {
         while (args.reactions.length > 0) {
             const temp = args.reactions.splice(0, 2);
             const reaction = new Reaction();
+            if (temp[0].startsWith("<")) {
+                temp[0] = temp[0].slice(2);
+                temp[0] = temp[0].slice(0, -1);
+            }
             reaction.emoji = temp[0];
             reaction.role = temp[1];
             m.reactions.push(reaction);

@@ -113,18 +113,19 @@ client.on("messageReactionAdd", async (reaction, user) => {
         return;
     }
     const reactRole = reactMsg.reactions.find(
-        (x: Reaction) => x.emoji === reaction.emoji.name,
+        (x: Reaction) => {
+            if (x.emoji.includes(":")) {
+                return x.emoji === reaction.emoji.identifier;
+            } else {
+                return x.emoji === reaction.emoji.name;
+            }
+        },
     );
     const guildRole = reaction.message.guild.roles.find(
         (x: Role) => x.name === reactRole.role,
     );
-    if (
-        reactMsg.id === reaction.message.id &&
-        reactRole.emoji === reaction.emoji.name
-    ) {
-        if (!guildMember.roles.has(guildRole.id)) {
-            guildMember.addRole(guildRole);
-        }
+    if (!guildMember.roles.has(guildRole.id)) {
+        guildMember.addRole(guildRole);
     }
 });
 
@@ -138,18 +139,19 @@ client.on("messageReactionRemove", async (reaction, user) => {
         return;
     }
     const reactRole = reactMsg.reactions.find(
-        (x: Reaction) => x.emoji === reaction.emoji.name,
+        (x: Reaction) => {
+            if (x.emoji.includes(":")) {
+                return x.emoji === reaction.emoji.identifier;
+            } else {
+                return x.emoji === reaction.emoji.name;
+            }
+        },
     );
     const guildRole = reaction.message.guild.roles.find(
         (x: Role) => x.name === reactRole.role,
     );
-    if (
-        reactMsg.id === reaction.message.id &&
-        reactRole.emoji === reaction.emoji.name
-    ) {
-        if (guildMember.roles.has(guildRole.id)) {
-            guildMember.removeRole(guildRole);
-        }
+    if (guildMember.roles.has(guildRole.id)) {
+        guildMember.removeRole(guildRole);
     }
 });
 
