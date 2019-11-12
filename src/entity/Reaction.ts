@@ -12,6 +12,6 @@ export class Reaction extends BaseEntity {
     @Column()
     role: string;
 
-    @ManyToOne(type => ReactionMessage, reactionmessage => reactionmessage.reactions)
+    @ManyToOne(type => ReactionMessage, reactionmessage => reactionmessage.reactions, { onDelete: "CASCADE" })
     owner: ReactionMessage;
 }

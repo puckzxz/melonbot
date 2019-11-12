@@ -6,6 +6,6 @@ export class ReactionMessage extends BaseEntity {
     @PrimaryColumn()
     id: string;
 
-    @OneToMany(type => Reaction, reaction => reaction.owner, {eager: true, cascade: true})
+    @OneToMany(type => Reaction, reaction => reaction.owner, { eager: true, cascade: true })
     reactions: Reaction[];
 }
