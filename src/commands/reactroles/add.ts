@@ -18,7 +18,6 @@ export default class AddCommand extends Command {
                 {
                     key: "channelID",
                     parse: (val: string) => {
-                        console.log(val);
                         return val.slice(2, -1);
                     },
                     prompt: "What channel is the message in?",
