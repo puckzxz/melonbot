@@ -16,7 +16,7 @@ Once you have your config ready, open a terminal and run `npm install && npm sta
 
 ## 🐳 Deploying with Docker
 
-Docker image coming soon!
+Assuming you have your `config.ts` filled in then run `docker-compose up -d`
 
 ## 🏗 Built with
 
